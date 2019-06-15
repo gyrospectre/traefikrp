@@ -1,0 +1,22 @@
+defaultEntryPoints = ["http", "https"]
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+      [entryPoints.http.redirect]
+        entryPoint = "https"
+  [entryPoints.https]
+    address = ":443"
+      [entryPoints.https.tls]
+  [entryPoints.dashboard]
+    address = ":8081"
+    [entryPoints.dashboard.auth]
+      [entryPoints.dashboard.auth.basic]
+        users = ["admin:$apr1$/LL4HPGI$uLYrKnsEqwnvvCJ5esdEc0"]
+
+[api]
+entrypoint="dashboard"
+
+[docker]
+domain = "localnet"
+watch = true
+network = "web"

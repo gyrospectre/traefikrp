@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  keycloak_db:
+    image: postgres:11.2-alpine
+    environment:
+        - POSTGRES_DB=keycloak
+        - POSTGRES_USER=keycloak
+        - POSTGRES_PASSWORD=changeme-postgres
+        - POSTGRES_ROOT_PASSWORD=changeme-rootpw
+    networks:
+      - web
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    labels:
+      - "traefik.enable=false"
+
+  keycloak:
+    image: jboss/keycloak:latest
+    hostname: keycloak
+    environment:
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=keycloak_db
+      - DB_DATABASE=keycloak
+      - DB_PORT=5432
+      - DB_USER=keycloak
+      - DB_SCHEMA=public
+      - DB_PASSWORD=changeme-postgres
+      - PROXY_ADDRESS_FORWARDING=true
+      - KEYCLOAK_LOGLEVEL=INFO
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/tmp/realm.json
+    volumes:
+      - ./keycloak/realm.json:/tmp/realm.json
+      - ./keycloak/keycloak-bg.png:/opt/jboss/keycloak/themes/keycloak/login/resources/img/keycloak-bg.png
+    depends_on:
+      - keycloak_db
+    networks:
+      - web
+    labels:
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=Host:auth.localnet"
+      - "traefik.protocol=http"
+    command: ["-b", "0.0.0.0", "-Dkeycloak.profile.feature.docker=enabled"]
+
+
+  traefik:
+    image: traefik:v1.7.2-alpine
+    hostname: traefik.localnet
+    environment:
+      TZ: Australia/Sydney
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/traefik.toml
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.frontend.rule=Host:monitor.localnet
+      - traefik.port=8081
+
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false

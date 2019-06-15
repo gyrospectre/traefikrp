@@ -21,7 +21,10 @@ sed 's/{{ LOCAL_IP }}/'"$LOCAL_IP"'/g' realm.json.template > keycloak/realm.json
 sudo docker-compose up -d keycloak
 
 echo -n "Waiting for server to become available "
-sleep 60
+until $(curl https://auth.localnet --insecure --silent | grep -q "Red Hat"); do
+    printf '.'
+    sleep 5
+done
 echo " \e[32mdone\e[39m"
 
 # Create initial user

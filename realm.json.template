@@ -244,7 +244,7 @@
     },
     {
       "id": "ff88533c-bb46-4f0d-a3ef-de47e1c4ad4d",
-      "clientId": "RP",
+      "clientId": "hooroo",
       "rootUrl": "https://{{ LOCAL_IP }}/",
       "adminUrl": "https://{{ LOCAL_IP }}/",
       "surrogateAuthRequired": false,
@@ -252,10 +252,11 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "https://{{ LOCAL_IP }}/*"
+        "https://hooroo.localnet/*"
       ],
       "webOrigins": [
-        "https://{{ LOCAL_IP }}"
+        "https://{{ LOCAL_IP }}",
+        "https://hooroo.localnet"
       ],
       "notBefore": 0,
       "bearerOnly": false,

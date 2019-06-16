@@ -39,5 +39,12 @@ SECRET=$(uuid)
 sudo docker exec -it traefikrp_keycloak_1 /opt/jboss/keycloak/bin/kcadm.sh update clients/ff88533c-bb46-4f0d-a3ef-de47e1c4ad4d -r rp -s secret=$SECRET --server http://$LOCAL_IP:8080/auth --realm master --user admin --password admin > /dev/null
 echo " \e[32mdone\e[39m"
 
+# Update GK config and build
+echo "*** Starting Gatekeeper ***"
+echo -n "Starting Keycloak ..."
+sed 's/{{ SECRET }}/'"$SECRET"'/g' keycloak-gatekeeper.conf.template > keycloak/keycloak-gatekeeper.conf
+sudo docker-compose up -d keycloak-gatekeeper
+echo " \e[32mdone\e[39m"
+
 echo
 echo "*** Finished ***"

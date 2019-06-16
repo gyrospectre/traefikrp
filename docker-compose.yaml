@@ -64,6 +64,22 @@ services:
       - traefik.port=8081
 
 
+  keycloak-gatekeeper:
+    image: keycloak/keycloak-gatekeeper:latest
+    labels:
+     - "traefik.port=3000"
+     - "traefik.frontend.rule=Host:hooroo.localnet"
+     - "traefik.protocol=http"
+    networks:
+      web:
+    external_links:
+      - traefik:auth.localnet
+    volumes:
+      - ./keycloak/keycloak-gatekeeper.conf:/etc/keycloak-gatekeeper.conf
+    entrypoint:
+      - /opt/keycloak-gatekeeper
+      - --config=/etc/keycloak-gatekeeper.conf
+
 networks:
   web:
     external: true

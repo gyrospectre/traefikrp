@@ -34,6 +34,7 @@ services:
     volumes:
       - ./keycloak/realm.json:/tmp/realm.json
       - ./keycloak/keycloak-bg.png:/opt/jboss/keycloak/themes/keycloak/login/resources/img/keycloak-bg.png
+      - ./keycloak/keycloak-logo-text.png:/opt/jboss/keycloak/themes/keycloak/login/resources/img/keycloak-logo-text.png
     depends_on:
       - keycloak_db
     networks:

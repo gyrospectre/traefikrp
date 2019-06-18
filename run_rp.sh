@@ -17,7 +17,6 @@ echo " \e[32mdone\e[39m"
 # Start Keyclock
 echo "*** Starting Keycloak ***"
 sudo ./clean-db.sh
-sed 's/{{ LOCAL_IP }}/'"$LOCAL_IP"'/g' realm.json.template > keycloak/realm.json
 sudo docker-compose up -d keycloak
 
 echo -n "Waiting for server to become available "
@@ -41,7 +40,6 @@ echo " \e[32mdone\e[39m"
 
 # Update GK config and build
 echo "*** Starting Gatekeeper ***"
-echo -n "Starting Keycloak ..."
 sed 's/{{ SECRET }}/'"$SECRET"'/g' keycloak-gatekeeper.conf.template > keycloak/keycloak-gatekeeper.conf
 sudo docker-compose up -d keycloak-gatekeeper
 echo " \e[32mdone\e[39m"

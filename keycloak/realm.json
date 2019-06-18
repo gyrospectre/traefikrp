@@ -245,8 +245,8 @@
     {
       "id": "ff88533c-bb46-4f0d-a3ef-de47e1c4ad4d",
       "clientId": "hooroo",
-      "rootUrl": "https://192.168.1.9/",
-      "adminUrl": "https://192.168.1.9/",
+      "rootUrl": "https://172.20.10.10/",
+      "adminUrl": "https://172.20.10.10/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
@@ -255,7 +255,7 @@
         "https://hooroo.localnet/*"
       ],
       "webOrigins": [
-        "https://192.168.1.9",
+        "https://172.20.10.10",
         "https://hooroo.localnet"
       ],
       "notBefore": 0,

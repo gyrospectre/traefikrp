@@ -74,11 +74,13 @@ services:
       web:
     external_links:
       - traefik:auth.localnet
+      - app:hooroo
     volumes:
       - ./keycloak/keycloak-gatekeeper.conf:/etc/keycloak-gatekeeper.conf
     entrypoint:
       - /opt/keycloak-gatekeeper
       - --config=/etc/keycloak-gatekeeper.conf
+      - --enable-logging=true
 
 networks:
   web:

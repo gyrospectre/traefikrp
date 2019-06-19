@@ -16,7 +16,19 @@ echo " \e[32mdone\e[39m"
 
 # Start Keyclock
 echo "*** Starting Keycloak ***"
-sudo ./clean-db.sh
+while true; do
+  read -p "Reset to a new user database? " yn
+  case $yn in
+    [Yy]* ) CLEAN=1; break;;
+    [Nn]* ) CLEAN=0; break;;
+    * ) echo "Please answer y or n";;
+  esac
+done
+
+if [ $CLEAN -eq 1 ]
+then
+  sudo ./clean-db.sh
+fi
 sudo docker-compose up -d keycloak
 
 echo -n "Waiting for server to become available "
@@ -26,11 +38,14 @@ until $(curl https://auth.localnet --insecure --silent | grep -q "Red Hat"); do
 done
 echo " \e[32mdone\e[39m"
 
-# Create initial user
-echo -n "Creating initial app user ..."
-sudo docker exec -it traefikrp_keycloak_1 /opt/jboss/keycloak/bin/kcadm.sh create users -r rp -s username=testuser -s enabled=true --server http://127.0.0.1:8080/auth --realm master --user admin --password admin > /dev/null
-sudo docker exec -it traefikrp_keycloak_1 /opt/jboss/keycloak/bin/kcadm.sh set-password -r rp --username testuser --new-password NEWPASSWORD --temporary --server http://127.0.0.1:8080/auth --realm master --user admin --password admin > /dev/null
-echo " \e[32mdone\e[39m"
+if [ $CLEAN -eq 1 ]
+then
+  # Create initial user
+  echo -n "Creating initial app user ..."
+  sudo docker exec -it traefikrp_keycloak_1 /opt/jboss/keycloak/bin/kcadm.sh create users -r rp -s username=testuser -s enabled=true --server http://127.0.0.1:8080/auth --realm master --user admin --password admin > /dev/null
+  sudo docker exec -it traefikrp_keycloak_1 /opt/jboss/keycloak/bin/kcadm.sh set-password -r rp --username testuser --new-password NEWPASSWORD --temporary --server http://127.0.0.1:8080/auth --realm master --user admin --password admin > /dev/null
+  echo " \e[32mdone\e[39m"
+fi
 
 # Generate a new secret and update Keycloak client
 echo -n "Generating new client secret ..."
